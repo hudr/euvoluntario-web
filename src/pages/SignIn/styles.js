@@ -38,6 +38,12 @@ export const AnimationContainer = styled.div`
   align-items: center;
   justify-content: center;
   animation: ${appearFromLeft} 1s;
+
+  img {
+    height: 80px;
+    transform: rotate(45deg);
+  }
+
   form {
     margin: 40px 0px;
     width: 340px;

@@ -38,7 +38,7 @@ const Charities = () => {
               <div>
                 <div>
                   <span>Voltar para</span>
-                  <strong>Tela Inicial</strong>
+                  <strong>Menus</strong>
                 </div>
               </div>
             </Link>

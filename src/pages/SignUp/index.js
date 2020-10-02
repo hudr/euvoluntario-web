@@ -56,7 +56,6 @@ const SignUp = () => {
 
         history.push('/entrar')
       } catch (err) {
-        console.log(err)
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err)
 
