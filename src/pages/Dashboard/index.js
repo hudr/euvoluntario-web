@@ -1,5 +1,5 @@
 import React from 'react'
-import { FiPower, FiUsers } from 'react-icons/fi'
+import { FiPower, FiUsers, FiPlusSquare } from 'react-icons/fi'
 import { MdNotificationsNone, MdNotificationsActive } from 'react-icons/md'
 import { RiBuildingLine } from 'react-icons/ri'
 import { BsListNested } from 'react-icons/bs'
@@ -31,8 +31,9 @@ const Dashboard = () => {
               <div>
                 <img
                   src={
-                    user.avatar_url ||
-                    'https://api.adorable.io/avatars/186/abott@adorable.io.png'
+                    user.avatarUrl
+                      ? `https://euvoluntario.s3.amazonaws.com/users/${user.avatarUrl}`
+                      : 'https://api.adorable.io/avatars/186/abott@adorable.io.png'
                   }
                   alt={`Imagem de ${user.name}`}
                 />
@@ -54,6 +55,15 @@ const Dashboard = () => {
         <h2>O que você deseja fazer?</h2>
 
         <div>
+          {user.role && user.role === 'entity' && (
+            <Link to="/painel/cadastrar">
+              <Card>
+                <FiPlusSquare />
+                <span>Cadastrar Caridade</span>
+              </Card>
+            </Link>
+          )}
+
           <Link to="/painel/caridades">
             <Card>
               <BsListNested />

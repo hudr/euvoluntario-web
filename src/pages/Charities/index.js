@@ -54,9 +54,14 @@ const Charities = () => {
               <Link to={`/painel/caridade/${charity._id}`} key={charity._id}>
                 <Card>
                   <span>{charity.title}</span>
-                  <p>{charity.assignedTo.name}</p>
-                  <p>{charity.address}</p>
-                  <p>{format(new Date(charity.date), 'dd/MM/yy')}</p>
+                  <p>Instituição - {charity.assignedTo.name}</p>
+                  <p>Local - {charity.address}</p>
+                  <p>
+                    {`Quando - ${format(
+                      new Date(charity.date),
+                      'dd/MM/yy HH:mm'
+                    )}h`}
+                  </p>
                 </Card>
               </Link>
             ))

@@ -50,7 +50,7 @@ const Profile = () => {
 
         data.append('avatar', userAvatar)
 
-        await api.patch('/users/avatar', data).then((response) => {
+        await api.patch('/user/profile/avatar', data).then((response) => {
           updateUser(response.data)
 
           addToast({
@@ -151,7 +151,7 @@ const Profile = () => {
           const imageName = image.name
           const imageSize = Math.round(image.size / 1000)
 
-          if (imageSize <= 2000) {
+          if (imageSize <= 1000) {
             if (
               imageName.indexOf('.jpeg') >= 0 ||
               imageName.indexOf('.jpg') >= 0 ||
@@ -169,7 +169,7 @@ const Profile = () => {
             return addToast({
               type: 'error',
               title: 'Arquivo pesado!',
-              description: 'O limite para upload de imagem é de 2MB.',
+              description: 'O limite para upload de imagem é de 1MB.',
             })
           }
         }
@@ -242,8 +242,9 @@ const Profile = () => {
           <AvatarInput>
             <img
               src={
-                user.avatarUrl ||
-                'https://api.adorable.io/avatars/186/abott@adorable.io.png'
+                user.avatarUrl
+                  ? `https://euvoluntario.s3.amazonaws.com/users/${user.avatarUrl}`
+                  : 'https://api.adorable.io/avatars/186/abott@adorable.io.png'
               }
               alt={user.name}
             />
