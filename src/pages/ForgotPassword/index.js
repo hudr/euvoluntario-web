@@ -1,10 +1,9 @@
-import React, { useCallback, useRef } from 'react'
-import { FiMail, FiLock, FiArrowLeft, FiLogIn } from 'react-icons/fi'
+import React, { useCallback, useRef, useState } from 'react'
+import { FiMail, FiArrowLeft } from 'react-icons/fi'
 import { Form } from '@unform/web'
 import * as Yup from 'yup'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
-import { useAuth } from '../../hooks/auth'
 import { useToast } from '../../hooks/toast'
 
 import getValidationErrors from '../../utils/getValidationErrors'
@@ -15,37 +14,42 @@ import Input from '../../components/Input'
 import Button from '../../components/Button'
 
 import { Container, Content, AnimationContainer, Background } from './styles'
+import api from '../../services/api'
 
-const SignIn = () => {
+const ForgotPassword = () => {
+  const [loading, setLoading] = useState(false)
+
   const formRef = useRef(null)
 
-  const { signIn } = useAuth()
   const { addToast } = useToast()
-
-  const history = useHistory()
 
   const handleSubmit = useCallback(
     async (data) => {
       try {
+        setLoading(true)
+
         formRef.current.setErrors({})
 
         const schema = Yup.object().shape({
           email: Yup.string()
             .required('E-mail obrigatório')
             .email('Digite um e-mail válido'),
-          password: Yup.string().required('Senha obrigatória'),
         })
 
         await schema.validate(data, {
           abortEarly: false,
         })
 
-        await signIn({
+        await api.post('/user/password/forgot', {
           email: data.email.toLowerCase(),
-          password: data.password,
         })
 
-        history.push('/painel')
+        addToast({
+          type: 'success',
+          title: 'E-mail de recuperação enviado!',
+          description:
+            'Enviamos um e-mail para confirmar a recuperação de senha, cheque sua caixa de entrada!',
+        })
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err)
@@ -57,12 +61,15 @@ const SignIn = () => {
 
         addToast({
           type: 'error',
-          title: 'Erro na autenticação',
-          description: 'Ocorreu um erro ao fazer login, cheque as credenciais',
+          title: 'Erro na recuperação de senha',
+          description:
+            'Ocorreu um erro ao tentar realizar a recuperação de senha, tente novamente.',
         })
+      } finally {
+        setLoading(false)
       }
     },
-    [signIn, addToast, history]
+    [addToast]
   )
 
   return (
@@ -72,29 +79,18 @@ const SignIn = () => {
           <img src={logoImg} alt="Eu Voluntário" />
 
           <Form ref={formRef} onSubmit={handleSubmit}>
-            <h1>Faça seu logon</h1>
+            <h1>Recuperar senha</h1>
 
             <Input name="email" icon={FiMail} placeholder="E-mail" />
-            <Input
-              name="password"
-              icon={FiLock}
-              type="password"
-              placeholder="Senha"
-            />
 
-            <Button type="submit">Entrar</Button>
-
-            <Link to="/esqueci-minha-senha">Esqueci minha senha</Link>
+            <Button loading={loading} type="submit">
+              Recuperar
+            </Button>
           </Form>
 
-          <Link to="/cadastrar">
-            <FiLogIn />
-            Criar conta
-          </Link>
-
-          <Link to="/">
+          <Link to="/entrar">
             <FiArrowLeft />
-            Voltar para página inicial
+            Voltar ao login
           </Link>
         </AnimationContainer>
       </Content>
@@ -103,4 +99,4 @@ const SignIn = () => {
   )
 }
 
-export default SignIn
+export default ForgotPassword
