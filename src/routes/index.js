@@ -10,8 +10,11 @@ import Charities from '../pages/Charities'
 import Charity from '../pages/Charity'
 import CreateCharity from '../pages/CreateCharity'
 
+import Teste from '../pages/Teste'
+
 const Routes = () => (
   <Switch>
+    <Route path="/" exact component={Teste} />
     <Route path="/entrar" exact component={SignIn} />
     <Route path="/cadastrar" exact component={SignUp} />
     <Route path="/painel" exact component={Dashboard} isPrivate />
