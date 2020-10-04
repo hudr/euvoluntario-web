@@ -1250,6 +1250,11 @@
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.2.5.tgz#8eed982e2ee6f7f4e44c253e12962980791efd46"
   integrity sha512-6U71C2Wp7r5XtFtQzYrW5iKFT67OixrSxjI4MptCHzdSVlgabczzqLe0ZSgnub/5Kp4hSbpDB1tMytZY9pwxxA==
 
+"@googlemaps/js-api-loader@^1.2.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@googlemaps/js-api-loader/-/js-api-loader-1.4.0.tgz#2dcfc22c25fb295596046c3120d870de686aae77"
+  integrity sha512-WVGfV0AINBFdpBt+qgtQe2H2KWDpH0snXTeIZID2YgGo5bSNKxjaFqiw96Ma19oupTWr9B1ud+6j4xhHe/BMWA==
+
 "@hapi/address@2.x.x":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@hapi/address/-/address-2.1.4.tgz#5d67ed43f3fd41a69d4b9ff7b56e7c0d1d0a81e5"
@@ -1450,6 +1455,11 @@
     "@types/node" "*"
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
+
+"@mapbox/point-geometry@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@mapbox/point-geometry/-/point-geometry-0.1.0.tgz#8a83f9335c7860effa2eeeca254332aa0aeed8f2"
+  integrity sha1-ioP5M1x4YO/6Lu7KJUMyqgru2PI=
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
@@ -4575,7 +4585,7 @@ etag@~1.8.1:
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
 
-eventemitter3@^4.0.0:
+eventemitter3@^4.0.0, eventemitter3@^4.0.4:
   version "4.0.7"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
   integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
@@ -5227,6 +5237,16 @@ globby@^6.1.0:
     object-assign "^4.0.1"
     pify "^2.0.0"
     pinkie-promise "^2.0.0"
+
+google-map-react@^2.1.7:
+  version "2.1.7"
+  resolved "https://registry.yarnpkg.com/google-map-react/-/google-map-react-2.1.7.tgz#0cab771e76b973e46c12f86b82468e7ff541ecd1"
+  integrity sha512-B13cV2JMLGjelLyfv4hAk08/EmvIVBLnwSJrshw3Dfd3RsqPapP34SvAslPErkY+sxba+5me6vH3IQqqCqLvIw==
+  dependencies:
+    "@googlemaps/js-api-loader" "^1.2.0"
+    "@mapbox/point-geometry" "^0.1.0"
+    eventemitter3 "^4.0.4"
+    prop-types "^15.7.2"
 
 graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.2:
   version "4.2.4"
@@ -9065,6 +9085,13 @@ react-error-overlay@^6.0.7:
   version "6.0.7"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-6.0.7.tgz#1dcfb459ab671d53f660a991513cb2f0a0553108"
   integrity sha512-TAv1KJFh3RhqxNvhzxj6LeT5NWklP6rDr2a0jaTfsZ5wSZWHOGeqQyejUp3xxLfPt2UpyJEcVQB/zyPcmonNFA==
+
+react-geocode@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/react-geocode/-/react-geocode-0.2.1.tgz#c9f58d979097272831a01ef0ebd89add8e15725a"
+  integrity sha512-kipHpIA1w0XbQ2x6BOpLsup9kui6yjjAaXigCtom85xiKDB2KqDlxYx7dzd68Hxd5KG27nSFiWNRLosjKVg6VQ==
+  dependencies:
+    regenerator-runtime "^0.13.3"
 
 react-icons@^3.11.0:
   version "3.11.0"

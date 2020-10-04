@@ -4,6 +4,8 @@ import { FiArrowLeft } from 'react-icons/fi'
 import { Link, useParams } from 'react-router-dom'
 import api from '../../services/api'
 
+import Map from '../../components/Map'
+
 import { Container, Header, HeaderContent, BackTo, Content } from './styles'
 
 const Charity = () => {
@@ -58,6 +60,14 @@ const Charity = () => {
         <p>Endereço: {charity.assignedTo?.address}</p>
         <p>Telefone: {charity.assignedTo?.phone}</p>
         <p>CNPJ: {charity.assignedTo?.cnpj}</p>
+
+        {charity.address && (
+          <>
+            <h2 style={{ marginTop: '30px' }}>Mapa</h2>
+            <p>Endereço: {charity.address}</p>
+            <Map address={charity.address} />
+          </>
+        )}
 
         <h2 style={{ marginTop: '30px' }}>Voluntários</h2>
 

@@ -46,9 +46,6 @@ const Teste = () => {
           <p>Hudson Ramos</p>
           <p>21970000000</p>
         </li>
-
-        <h2 style={{ marginTop: '30px' }}>Imagem</h2>
-        <img src="https://i.stack.imgur.com/L1WnE.png" alt="Imagem do Mapa" />
       </Content>
     </Container>
   )
