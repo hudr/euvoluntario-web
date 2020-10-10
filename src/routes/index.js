@@ -6,8 +6,10 @@ import SignIn from '../pages/SignIn'
 import SignUp from '../pages/SignUp'
 import Dashboard from '../pages/Dashboard'
 import Profile from '../pages/Profile'
-import Charities from '../pages/Charities'
 import Charity from '../pages/Charity'
+import Charities from '../pages/Charities'
+import Volunteers from '../pages/Volunteers'
+import Entities from '../pages/Entities'
 import CreateCharity from '../pages/CreateCharity'
 import ForgotPassword from '../pages/ForgotPassword'
 import ResetPassword from '../pages/ResetPassword'
@@ -25,6 +27,8 @@ const Routes = () => (
     <Route path="/painel/perfil" exact component={Profile} isPrivate />
     <Route path="/painel/cadastrar" exact component={CreateCharity} isPrivate />
     <Route path="/painel/caridades" exact component={Charities} isPrivate />
+    <Route path="/painel/voluntarios" exact component={Volunteers} isPrivate />
+    <Route path="/painel/entidades" exact component={Entities} isPrivate />
 
     <Route
       path="/painel/caridade/:charityId"
