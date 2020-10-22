@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import { format } from 'date-fns'
 import { FiArrowLeft } from 'react-icons/fi'
+import { AiFillCheckSquare, AiFillCloseCircle } from 'react-icons/ai'
 import { Link, useParams } from 'react-router-dom'
+import { useAuth } from '../../hooks/auth'
 import api from '../../services/api'
 
 import Map from '../../components/Map'
 
-import { Container, Header, HeaderContent, BackTo, Content } from './styles'
+import { Container, Header, HeaderContent, BackTo, Content, Card, EntityAction } from './styles'
 
 const Charity = () => {
+  const { user } = useAuth()
+
   const { charityId } = useParams()
 
   const [charity, setCharity] = useState([])
@@ -23,11 +27,35 @@ const Charity = () => {
     fetchData()
   }, [charityId])
 
-  const volunteersApproved =
+  const charityVolunteers =
     charity.volunteers &&
     charity.volunteers.filter((volunteer) => {
-      return volunteer.approved === 'true'
+      if(user.role === 'entity') {
+        if(volunteer.approved === 'true' || volunteer.approved === 'false') return volunteer
+      } else {
+        return volunteer.approved === 'true'
+      }
     })
+
+  async function approveUser(subscribeId) {
+    const response = await api.patch(`/charity/approve/${charityId}`, {
+      subscribeId
+    })
+
+    const { data } = response
+    const { charity } = data
+    setCharity(charity)
+  } 
+
+  async function denyUser(subscribeId) {
+    const response = await api.patch(`/charity/deny/${charityId}`, {
+      subscribeId
+    })
+
+    const { data } = response
+    const { charity } = data
+    setCharity(charity)
+  } 
 
   if (!charity) return <h1>Carregando...</h1>
 
@@ -65,21 +93,50 @@ const Charity = () => {
           <>
             <h2 style={{ marginTop: '30px' }}>Mapa</h2>
             <p>Endereço: {charity.address}</p>
-            <Map address={charity.address} />
+            {/* <Map address={charity.address} /> */}
           </>
         )}
 
         <h2 style={{ marginTop: '30px' }}>Voluntários</h2>
 
-        {charity.volunteers && volunteersApproved.length > 0 ? (
-          volunteersApproved.map((volunteer) => (
-            <li
-              style={{ listStyle: 'none', marginBottom: '5px' }}
-              key={volunteer._id}
-            >
-              <p>{volunteer.user.name}</p>
-              <p>{volunteer.user.phone}</p>
-            </li>
+        <div>
+          
+              
+        
+        </div>
+
+        {charity.volunteers && charityVolunteers.length > 0 ? (
+          charityVolunteers.map((volunteer) => (
+            <div key={volunteer._id}>
+                <Card>
+                  <Link to={`/painel/perfil/${volunteer.user._id}`}>
+                    <img
+                      src={
+                        volunteer.user.avatarUrl
+                          ? `https://euvoluntario.s3.amazonaws.com/users/${volunteer.user.avatarUrl}`
+                          : 'https://api.adorable.io/avatars/186/abott@adorable.io.png'
+                      }
+                      alt={volunteer.user.name}
+                    />
+                    <span>{volunteer.user.name}</span>
+
+                    <p>Contato - {volunteer.user.phone}</p>
+                    <p>
+                      {`Desde - ${format(
+                        new Date(volunteer.user.createdAt),
+                        'dd/MM/yy'
+                      )}`}
+                    </p>
+                  </Link>
+
+                  {(user.role === 'entity' && (volunteer.approved === 'false')) &&
+                    <EntityAction>
+                      <AiFillCheckSquare onClick={() => approveUser(volunteer._id)}/>
+                      <AiFillCloseCircle onClick={() => denyUser(volunteer._id)}/>
+                    </EntityAction>
+                  }
+                </Card>
+            </div>
           ))
         ) : (
           <p>Esta caridade ainda não possui voluntários confirmados.</p>

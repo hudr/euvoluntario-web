@@ -66,7 +66,7 @@ export const Content = styled.div`
   display: flex;
   flex-direction: column;
   > div {
-    margin-top: 30px;
+    margin-top: 10px;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 16px;
@@ -77,8 +77,6 @@ export const Content = styled.div`
 `
 
 export const Card = styled.div`
-  display: flex;
-  flex-direction: column;
   background: rgb(41, 41, 46);
   border-width: 2px;
   border-style: solid;
@@ -87,16 +85,23 @@ export const Card = styled.div`
   border-radius: 5px;
   padding: 24px;
   transition: border 0.2s ease 0s;
-  svg {
-    width: 24px;
-    height: 24px;
-    color: #ff9000;
-    margin-bottom: 12px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+
+  a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 
   img {
     width: 56px;
-    border-radius: 10%;
+    border-radius: 50%;
     margin-bottom: 10px;
   }
 
@@ -106,10 +111,34 @@ export const Card = styled.div`
   }
 
   p {
-    font-style: italic;
     font-size: 12px;
   }
   &:hover {
     border-color: #ff9000;
+  }
+`
+
+export const EntityAction = styled.div`
+  
+  margin-top: 15px;
+  display: flex;
+
+  svg {
+    width: 30px;
+    height: 30px;
+
+    &:first-child {
+        color: #14FF25;
+
+        &:hover {
+          color: #00b80d;
+        }
+    }
+
+    color: #FF5858;
+
+    &:hover {
+      color: #a33131;
+    }
   }
 `
