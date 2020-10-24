@@ -3,12 +3,14 @@ import { format } from 'date-fns'
 import { FiArrowLeft } from 'react-icons/fi'
 import { AiFillCheckSquare, AiFillCloseCircle } from 'react-icons/ai'
 import { Link, useParams } from 'react-router-dom'
+import Swal from 'sweetalert2'
 import { useAuth } from '../../hooks/auth'
-import api from '../../services/api'
 import { useToast } from '../../hooks/toast'
+import api from '../../services/api'
 
 import Map from '../../components/Map'
 import Button from '../../components/Button'
+
 
 import { Container, Header, HeaderContent, BackTo, Content, Card, EntityAction } from './styles'
 
@@ -47,7 +49,7 @@ const Charity = () => {
   )
    
 
-  async function approveUser(subscribeId) {
+  async function approveUser(subscribeId, volunteerId) {
     const response = await api.patch(`/charity/approve/${charityId}`, {
       subscribeId
     })
@@ -56,24 +58,61 @@ const Charity = () => {
     const { charity } = data
     setCharity(charity)
 
+    await api.post('/user/notification', {
+      status: "Aprovado",
+      charity_id: charityId,
+      user_id: volunteerId
+    })
+
     addToast({
       type: 'success',
       title: 'Voluntário aprovado com sucesso',
     })
   } 
 
-  async function denyUser(subscribeId) {
-    const response = await api.patch(`/charity/deny/${charityId}`, {
-      subscribeId
-    })
+  async function denyUser(subscribeId, charityId, volunteerId) {
+    Swal.fire({
+      title: 'Informe o motivo',
+      input: 'textarea',
+      inputPlaceholder: 'Ex.: Atingimos o limite de voluntários',
+      inputAttributes: {
+          'aria-label': 'Ex.: Atingimos o limite de voluntários'
+      },
+      confirmButtonText: 'Recusar',
+      confirmButtonColor: 'red',
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
 
-    const { data } = response
-    const { charity } = data
-    setCharity(charity)
+      showLoaderOnConfirm: true,
 
-    addToast({
-      type: 'success',
-      title: 'Voluntário recusado com sucesso',
+      inputValidator: (value) => {
+        return !value && 'Você precisa preencher o motivo!'
+      },
+
+      // Recusando Voluntário
+      preConfirm: async (message) => {
+          const response = await api.patch(`/charity/deny/${charityId}`, {
+              subscribeId
+          })
+
+          const { data } = response
+          const { charity } = data
+
+          setCharity(charity)
+
+          await api.post('/user/notification', {
+            message,
+            status: "Reprovado",
+            charity_id: charityId,
+            user_id: volunteerId
+          })
+
+          addToast({
+            type: 'success',
+            title: 'Voluntário reprovado com sucesso!',
+          })
+      },
+      allowOutsideClick: () => !Swal.isLoading() 
     })
   } 
 
@@ -158,8 +197,8 @@ const Charity = () => {
 
                   {(user._id === charity.assignedTo._id && (volunteer.approved === 'false')) &&
                     <EntityAction>
-                      <AiFillCheckSquare onClick={() => approveUser(volunteer._id)}/>
-                      <AiFillCloseCircle onClick={() => denyUser(volunteer._id)}/>
+                      <AiFillCheckSquare onClick={() => approveUser(volunteer._id, volunteer.user._id)}/>
+                      <AiFillCloseCircle onClick={() => denyUser(volunteer._id, charityId, volunteer.user._id)}/>
                     </EntityAction>
                   }
                 </Card>

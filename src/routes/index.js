@@ -10,6 +10,7 @@ import Charity from '../pages/Charity'
 import Charities from '../pages/Charities'
 import Volunteers from '../pages/Volunteers'
 import Entities from '../pages/Entities'
+import Notifications from '../pages/Notifications'
 import CreateCharity from '../pages/CreateCharity'
 import ForgotPassword from '../pages/ForgotPassword'
 import ResetPassword from '../pages/ResetPassword'
@@ -27,6 +28,7 @@ const Routes = () => (
     <Route path="/painel/perfil" exact component={Profile} isPrivate />
     <Route path="/painel/cadastrar" exact component={CreateCharity} isPrivate />
     <Route path="/painel/caridades" exact component={Charities} isPrivate />
+    <Route path="/painel/notificacoes" exact component={Notifications} isPrivate />
     <Route path="/painel/voluntarios" exact component={Volunteers} isPrivate />
     <Route path="/painel/entidades" exact component={Entities} isPrivate />
 
