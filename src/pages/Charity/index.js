@@ -5,13 +5,17 @@ import { AiFillCheckSquare, AiFillCloseCircle } from 'react-icons/ai'
 import { Link, useParams } from 'react-router-dom'
 import { useAuth } from '../../hooks/auth'
 import api from '../../services/api'
+import { useToast } from '../../hooks/toast'
 
 import Map from '../../components/Map'
+import Button from '../../components/Button'
 
 import { Container, Header, HeaderContent, BackTo, Content, Card, EntityAction } from './styles'
 
 const Charity = () => {
   const { user } = useAuth()
+
+  const { addToast } = useToast()
 
   const { charityId } = useParams()
 
@@ -30,12 +34,18 @@ const Charity = () => {
   const charityVolunteers =
     charity.volunteers &&
     charity.volunteers.filter((volunteer) => {
-      if(user.role === 'entity') {
+      if(user._id === charity.assignedTo._id) {
         if(volunteer.approved === 'true' || volunteer.approved === 'false') return volunteer
-      } else {
-        return volunteer.approved === 'true'
-      }
+      } 
+      
+      return volunteer.approved === 'true'
     })
+
+
+  const isSubscribed = charity.volunteers && charity.volunteers.find(volunteer =>
+    (volunteer.user._id === user._id)
+  )
+   
 
   async function approveUser(subscribeId) {
     const response = await api.patch(`/charity/approve/${charityId}`, {
@@ -45,6 +55,11 @@ const Charity = () => {
     const { data } = response
     const { charity } = data
     setCharity(charity)
+
+    addToast({
+      type: 'success',
+      title: 'Voluntário aprovado com sucesso',
+    })
   } 
 
   async function denyUser(subscribeId) {
@@ -55,6 +70,24 @@ const Charity = () => {
     const { data } = response
     const { charity } = data
     setCharity(charity)
+
+    addToast({
+      type: 'success',
+      title: 'Voluntário recusado com sucesso',
+    })
+  } 
+
+  async function subscribe() {
+    const response = await api.patch(`/charity/subscribe/${charityId}`)
+
+    const { data } = response
+    const { charity } = data
+    setCharity(charity)
+
+    addToast({
+      type: 'success',
+      title: 'Você se inscreveu, aguarde aprovação!',
+    })
   } 
 
   if (!charity) return <h1>Carregando...</h1>
@@ -99,12 +132,6 @@ const Charity = () => {
 
         <h2 style={{ marginTop: '30px' }}>Voluntários</h2>
 
-        <div>
-          
-              
-        
-        </div>
-
         {charity.volunteers && charityVolunteers.length > 0 ? (
           charityVolunteers.map((volunteer) => (
             <div key={volunteer._id}>
@@ -129,7 +156,7 @@ const Charity = () => {
                     </p>
                   </Link>
 
-                  {(user.role === 'entity' && (volunteer.approved === 'false')) &&
+                  {(user._id === charity.assignedTo._id && (volunteer.approved === 'false')) &&
                     <EntityAction>
                       <AiFillCheckSquare onClick={() => approveUser(volunteer._id)}/>
                       <AiFillCloseCircle onClick={() => denyUser(volunteer._id)}/>
@@ -141,6 +168,14 @@ const Charity = () => {
         ) : (
           <p>Esta caridade ainda não possui voluntários confirmados.</p>
         )}
+
+        {(!isSubscribed && user.role !== 'entity') && <Button onClick={subscribe}>Solicitar participação</Button>}
+  
+        {(isSubscribed && isSubscribed.approved === 'false') && <p>Você já solicitou participação, aguarde sua aprovação.</p>}
+
+        {(isSubscribed && isSubscribed.approved === 'denied') && <p>Sua solicitação de participação foi negada, consulte suas notificações.</p>}
+        
+
       </Content>
     </Container>
   )
