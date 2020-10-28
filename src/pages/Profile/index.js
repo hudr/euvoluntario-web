@@ -68,7 +68,6 @@ const Profile = () => {
     async (data) => {
       try {
         formRef.current.setErrors({})
-
         const schema = Yup.object().shape({
           name: Yup.string().required('Nome é obrigatório'),
           email: Yup.string()
@@ -97,7 +96,7 @@ const Profile = () => {
 
         await schema.validate(data, { abortEarly: false })
 
-        const { name, email, phone, address, cnpj, role, ...rest } = data
+        const { name, email, phone, address, cnpj, role, qualities, ...rest } = data
 
         const formData = {
           name,
@@ -106,6 +105,7 @@ const Profile = () => {
           address,
           cnpj,
           role,
+          qualities,
           ...(rest.old_password ? rest : {}),
         }
 
@@ -183,6 +183,7 @@ const Profile = () => {
   const customStyles = {
     control: (styles) => ({
       ...styles,
+      marginBottom: 7,
       padding: 10,
       border: 0,
       width: '100%',
@@ -208,6 +209,18 @@ const Profile = () => {
   const roleOptions = [
     { value: 'volunteer', label: 'Voluntário(a)' },
     { value: 'entity', label: 'Entidade' },
+  ]
+
+  const userQualities = user.qualities.map(quality => { 
+    return { value: quality, label: quality}
+  })
+
+  const qualityOptions = [
+    { value: 'Cozinha', label: 'Cozinha' },
+    { value: 'Ama Pets', label: 'Ama Pets' },
+    { value: 'É digital', label: 'É digital' },
+    { value: 'Carrega Peso', label: 'Carrega Peso' },
+    { value: 'Cuida de Crianças', label: 'Cuida de Crianças' },
   ]
 
   return (
@@ -236,6 +249,7 @@ const Profile = () => {
             phone: user.phone,
             address: user.address,
             cnpj: user.cnpj,
+            qualities: userQualities,
           }}
           onSubmit={handleSubmit}
         >
@@ -244,7 +258,7 @@ const Profile = () => {
               src={
                 user.avatarUrl
                   ? `https://euvoluntario.s3.amazonaws.com/users/${user.avatarUrl}`
-                  : 'https://api.adorable.io/avatars/186/abott@adorable.io.png'
+                  : 'https://api.hello-avatar.com/adorables/186/abott@adorable.io.png'
               }
               alt={user.name}
             />
@@ -279,6 +293,15 @@ const Profile = () => {
             placeholder="Endereço"
           />
 
+          <Select
+            name="role"
+            defaultValue={
+              user.role === 'volunteer' ? roleOptions[0] : roleOptions[1]
+            }
+            styles={customStyles}
+            isDisabled={true}
+          />
+
           {user.role === 'entity' && (
             <Input
               name="cnpj"
@@ -288,14 +311,17 @@ const Profile = () => {
             />
           )}
 
-          <Select
-            name="role"
-            defaultValue={
-              user.role === 'volunteer' ? roleOptions[0] : roleOptions[1]
-            }
-            styles={customStyles}
-            isDisabled={true}
-          />
+          {user.role === 'volunteer' && (
+            <Select
+              name="qualities"
+              styles={customStyles}
+              options={qualityOptions}
+              isMulti
+              isSearchable
+              placeholder="Escolha suas qualidades"
+              required
+            />
+          )}
 
           <Input
             containerStyle={{ marginTop: 24 }}

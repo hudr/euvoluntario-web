@@ -180,7 +180,7 @@ const Charity = () => {
                       src={
                         volunteer.user.avatarUrl
                           ? `https://euvoluntario.s3.amazonaws.com/users/${volunteer.user.avatarUrl}`
-                          : 'https://api.adorable.io/avatars/186/abott@adorable.io.png'
+                          : 'https://api.hello-avatar.com/adorables/186/abott@adorable.io.png'
                       }
                       alt={volunteer.user.name}
                     />
@@ -193,6 +193,23 @@ const Charity = () => {
                         'dd/MM/yy'
                       )}`}
                     </p>
+
+                    <ul style={{ marginTop: '15px' }}>
+                      {volunteer.user.qualities.map((quality, index) =>
+                        <li
+                          style={{
+                            margin: '5px',
+                            textAlign: 'center',
+                            listStyle: 'none',
+                            color: 'white',
+                            background: '#ff9000',
+                            padding: '4px',
+                            borderRadius: '5px',
+                            fontSize: '10px',
+                          }}
+                          key={index}>{quality}</li>
+                      )}
+                    </ul>
                   </Link>
 
                   {(user._id === charity.assignedTo._id && (volunteer.approved === 'false')) &&

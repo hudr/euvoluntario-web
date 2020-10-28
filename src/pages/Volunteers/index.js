@@ -62,7 +62,7 @@ const Volunteers = () => {
                     src={
                       volunteer.avatarUrl
                         ? `https://euvoluntario.s3.amazonaws.com/users/${volunteer.avatarUrl}`
-                        : 'https://api.adorable.io/avatars/186/abott@adorable.io.png'
+                        : 'https://api.hello-avatar.com/adorables/186/abott@adorable.io.png'
                     }
                     alt={volunteer.name}
                   />

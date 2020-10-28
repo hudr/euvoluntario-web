@@ -62,7 +62,7 @@ const Entities = () => {
                     src={
                       entity.avatarUrl
                         ? `https://euvoluntario.s3.amazonaws.com/users/${entity.avatarUrl}`
-                        : 'https://api.adorable.io/avatars/186/abott@adorable.io.png'
+                        : 'https://api.hello-avatar.com/adorables/186/abott@adorable.io.png'
                     }
                     alt={entity.name}
                   />

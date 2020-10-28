@@ -71,12 +71,13 @@ const SignUp = () => {
         })
       }
     },
-    [addToast, formRef, history]
+    [addToast, history]
   )
 
   const customStyles = {
     control: (styles) => ({
       ...styles,
+      marginBottom: 7,
       padding: 10,
       border: 0,
       width: '100%',
@@ -99,11 +100,21 @@ const SignUp = () => {
     singleValue: (styles) => ({ ...styles, color: '#fff' }),
   }
 
-  const [selectedRole, setSelectedRole] = useState('')
+  const [selectedRole, setSelectedRole] = useState({ value: 'volunteer', label: 'Voluntário(a)' })
 
   const roleOptions = [
     { value: 'volunteer', label: 'Voluntário(a)' },
     { value: 'entity', label: 'Entidade' },
+  ]
+
+  const [, setQualities] = useState('')
+
+  const qualityOptions = [
+    { value: 'Cozinha', label: 'Cozinha' },
+    { value: 'Ama Pets', label: 'Ama Pets' },
+    { value: 'É digital', label: 'É digital' },
+    { value: 'Carrega Peso', label: 'Carrega Peso' },
+    { value: 'Cuida de Crianças', label: 'Cuida de Crianças' },
   ]
 
   return (
@@ -140,15 +151,6 @@ const SignUp = () => {
               placeholder="Senha"
             />
 
-            {selectedRole && selectedRole.value === 'entity' && (
-              <Input
-                name="cnpj"
-                icon={RiBuildingLine}
-                type="text"
-                placeholder="28.105.064/0001-76"
-              />
-            )}
-
             <Select
               name="role"
               options={roleOptions}
@@ -158,6 +160,28 @@ const SignUp = () => {
               defaultValue={roleOptions[0]}
               required
             />
+
+            {selectedRole && selectedRole.value === 'entity' && (
+              <Input
+                name="cnpj"
+                icon={RiBuildingLine}
+                type="text"
+                placeholder="28.105.064/0001-76"
+              />
+            )}
+           
+            {selectedRole && selectedRole.value === 'volunteer' && (
+               <Select
+               name="qualities"
+               options={qualityOptions}
+               styles={customStyles}
+               isMulti
+               isSearchable
+               placeholder="Escolha suas qualidades"
+               onChange={setQualities}
+               required
+             />
+            )}
 
             <Button type="submit">Cadastrar</Button>
           </Form>

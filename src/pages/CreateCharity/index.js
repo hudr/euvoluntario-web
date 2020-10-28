@@ -2,6 +2,7 @@ import React, { useCallback, useRef } from 'react'
 import { FiMapPin, FiArrowLeft } from 'react-icons/fi'
 import { MdDescription } from 'react-icons/md'
 import { BiPencil } from 'react-icons/bi'
+import { BsPeopleFill } from 'react-icons/bs'
 
 import { Form } from '@unform/web'
 import * as Yup from 'yup'
@@ -30,6 +31,7 @@ const CreateCharity = () => {
 
         const schema = Yup.object().shape({
           title: Yup.string().required('Título é obrigatório'),
+          helpedPeople: Yup.string().min("1").required('Pessoas impactadas é obrigatório'),
           description: Yup.string().required('Descrição é obgrigatória'),
           address: Yup.string().required('Endereço obrigatório'),
           date: Yup.date().required('A data é obrigatória'),
@@ -91,6 +93,15 @@ const CreateCharity = () => {
           <h1>Criar Caridade</h1>
 
           <Input name="title" icon={BiPencil} placeholder="Título" />
+
+          <Input
+            name="helpedPeople"
+            icon={BsPeopleFill}
+            type="number"
+            min="1"
+            step="1"
+            placeholder="Pessoas Impactadas"
+          />
 
           <Input
             name="description"
