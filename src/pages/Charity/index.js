@@ -150,6 +150,7 @@ const Charity = () => {
       </Header>
       <Content>
         <h2>{charity.title}</h2>
+        <p>Pessoas Impactadas: {charity.helpedPeople}</p>
         <p>Descrição: {charity.description}</p>
         {charity.date && (
           <p>{`Data: ${format(new Date(charity.date), 'dd/MM/yy')}`}</p>
