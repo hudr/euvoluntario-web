@@ -14,8 +14,6 @@ const Home = () => {
       const response = await api.get('/dashboard')
       const { data } = response
 
-      console.log(data)
-
       setInfos(data)
     }
     fetchData()

@@ -123,6 +123,13 @@ const Charity = () => {
     const { charity } = data
     setCharity(charity)
 
+    await api.post('/user/notification', {
+      message: "Solicitação pendente",
+      status: "Solicitação",
+      charity_id: charityId,
+      user_id: charity.assignedTo._id
+    })
+
     addToast({
       type: 'success',
       title: 'Você se inscreveu, aguarde aprovação!',
@@ -166,7 +173,7 @@ const Charity = () => {
           <>
             <h2 style={{ marginTop: '30px' }}>Mapa</h2>
             <p>Endereço: {charity.address}</p>
-            {/* <Map address={charity.address} /> */}
+            <Map address={charity.address} />
           </>
         )}
 

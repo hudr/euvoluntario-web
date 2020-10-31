@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { format } from 'date-fns'
 import { FiArrowLeft } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
+import { useAuth } from '../../hooks/auth'
 import api from '../../services/api'
 
 import {
@@ -14,6 +15,7 @@ import {
 } from './styles'
 
 const Notifications = () => {
+  const { user } = useAuth()
   const [notifications, setNotifications] = useState([])
 
   useEffect(() => {
@@ -54,7 +56,15 @@ const Notifications = () => {
                 <Card key={notification._id}>
                   <span>Remetente: {notification.sender}</span>
                   <p>Iniciativa - {notification.charityName}</p>
-                  <p>Situação - <span style={{ color: notification.status === 'Aprovado' ? 'lightgreen' : 'red'}}>{notification.status}</span></p>
+
+                  {user.role === 'volunteer' &&
+                   <p>Situação - <span style={{ color: notification.status === 'Aprovado' ? 'lightgreen' : 'red'}}>{notification.status}</span></p>
+                  }
+
+                  {user.role === 'entity' &&
+                   <p>Situação - <span style={{ color: '#ff9000'}}>{notification.status}</span></p>
+                  }
+                 
                   <p>
                     {`Data da Notificação - ${format(
                       new Date(notification.createdAt),
@@ -62,9 +72,14 @@ const Notifications = () => {
                     )}h`}
                   </p>
 
-                  {notification.status === 'Reprovado' ?
-                  <p style={{marginTop: '10px'}}>Motivo - {notification.message}</p> 
-                  : <p style={{marginTop: '10px'}}>Fique atento(a) e não perca a data de realização da iniciativa. Obrigado por voluntariar-se!</p>}
+                  {user.role === 'volunteer' && (
+                    <>
+                    {notification.status === 'Reprovado' ?
+                      <p style={{marginTop: '10px'}}>Motivo - {notification.message}</p> 
+                      : <p style={{marginTop: '10px'}}>Fique atento(a) e não perca a data de realização da iniciativa. Obrigado por voluntariar-se!</p>}
+                    </>)
+                  }
+                  
                 </Card>
             ))
           ) : (
