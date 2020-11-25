@@ -58,7 +58,7 @@ const Notifications = () => {
                   <p>Iniciativa - {notification.charityName}</p>
 
                   {user.role === 'volunteer' &&
-                   <p>Situação - <span style={{ color: notification.status === 'Aprovado' ? 'lightgreen' : 'red'}}>{notification.status}</span></p>
+                   <p>Situação - <span style={{ color: notification.status === 'Aprovado' || notification.status === 'Informativo' ? 'lightgreen' : 'red'}}>{notification.status}</span></p>
                   }
 
                   {user.role === 'entity' &&
@@ -74,7 +74,7 @@ const Notifications = () => {
 
                   {user.role === 'volunteer' && (
                     <>
-                    {notification.status === 'Reprovado' ?
+                    {notification.status === 'Reprovado' || notification.status === 'Informativo' ?
                       <p style={{marginTop: '10px'}}>Motivo - {notification.message}</p> 
                       : <p style={{marginTop: '10px'}}>Fique atento(a) e não perca a data de realização da iniciativa. Obrigado por voluntariar-se!</p>}
                     </>)

@@ -114,7 +114,7 @@ const Charity = () => {
       },
       allowOutsideClick: () => !Swal.isLoading() 
     })
-  } 
+  }
 
   async function subscribe() {
     const response = await api.patch(`/charity/subscribe/${charityId}`)
@@ -133,6 +133,45 @@ const Charity = () => {
     addToast({
       type: 'success',
       title: 'Você se inscreveu, aguarde aprovação!',
+    })
+  } 
+
+  async function completeEvent(charityId) {
+    Swal.fire({
+      title: 'Insira o link para as fotos',
+      input: 'textarea',
+      inputPlaceholder: 'Instagram, facebook ou twitter',
+      inputAttributes: {
+          'aria-label': 'Ex.: Instagram, facebook ou twitter'
+      },
+      confirmButtonText: 'Finalizar',
+      confirmButtonColor: 'green',
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+
+      showLoaderOnConfirm: true,
+
+      inputValidator: (value) => {
+        return !value && 'Você precisa preencher o link!'
+      },
+
+      // Inserindo link no evento
+      preConfirm: async (message) => {
+          const response = await api.patch(`/charity/complete/${charityId}`, {
+            message
+          })
+
+          const { data } = response
+          const { charity } = data
+
+          setCharity(charity)
+
+          addToast({
+            type: 'success',
+            title: 'Iniciativa finalizada com sucesso!',
+          })
+      },
+      allowOutsideClick: () => !Swal.isLoading() 
     })
   } 
 
@@ -163,6 +202,15 @@ const Charity = () => {
           <p>{`Data: ${format(new Date(charity.date), 'dd/MM/yy')}`}</p>
         )}
 
+        {charity.completed === true &&
+          <>
+            <h2 style={{ marginTop: '30px' }}>Confira as fotos da iniciativa</h2>
+            <a href={charity.picturesLink} rel="noopener noreferrer" target="_blank">
+              <img style={{ width: '20%', marginTop: '15px'}} src="https://www.flaticon.com/svg/static/icons/svg/3066/3066491.svg" alt="Ilustração de câmera" />
+            </a>
+          </>
+        } 
+
         <h2 style={{ marginTop: '30px' }}>Entidade</h2>
         <p>Nome: {charity.assignedTo?.name}</p>
         <p>Endereço: {charity.assignedTo?.address}</p>
@@ -176,6 +224,15 @@ const Charity = () => {
             <Map address={charity.address} />
           </>
         )}
+
+        {charity.assignedTo?._id !== user._id &&
+          <>
+            <h2 style={{ marginTop: '30px', marginBottom: '20px' }}>Doação</h2>
+            <a rel="noopener noreferrer" href={`https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=${encodeURIComponent(charity.assignedTo?.email)}&item_name=${encodeURIComponent(`Doando para caridade ${charity.title}`)}&currency_code=BRL`}>
+              <img style={{ width: '110px' }} src="https://www.paypalobjects.com/pt_BR/BR/i/btn/btn_donateCC_LG.gif" alt="Donate" />
+            </a>
+          </>
+        }
 
         <h2 style={{ marginTop: '30px' }}>Voluntários</h2>
 
@@ -233,11 +290,18 @@ const Charity = () => {
           <p>Esta caridade ainda não possui voluntários confirmados.</p>
         )}
 
-        {(!isSubscribed && user.role !== 'entity') && <Button onClick={subscribe}>Solicitar participação</Button>}
+        {(!isSubscribed && user.role !== 'entity' && charity?.completed === false) && <Button onClick={subscribe}>Solicitar participação</Button>}
   
         {(isSubscribed && isSubscribed.approved === 'false') && <p>Você já solicitou participação, aguarde sua aprovação.</p>}
 
         {(isSubscribed && isSubscribed.approved === 'denied') && <p>Sua solicitação de participação foi negada, consulte suas notificações.</p>}
+
+        {charity.completed !== true && charity.assignedTo?._id === user._id &&
+          <>
+            <h2 style={{ marginTop: '30px' }}>Deseja concluir a iniciativa?</h2>
+            <Button onClick={() => completeEvent(charityId)}>Finalizar</Button>
+          </>
+        }
         
 
       </Content>
